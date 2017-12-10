@@ -8,6 +8,7 @@ import (
 	"sync"
 
 	"github.com/BurntSushi/toml"
+	"github.com/fatih/color"
 	// "github.com/spf13/cobra"
 )
 
@@ -59,17 +60,19 @@ func main() {
 	cmdNum := 0
 	for res := range resChan {
 		if res.err != nil {
-			logger.Printf("'%s' error (%s)", res.cmdStr, res.err)
+			color.Red("'%s' error (%s)", res.cmdStr, res.err)
 			logger.Printf("stdout\n%s", res.stdout.String())
 			logger.Printf("stderr\n%s", res.stderr.String())
 			numErrs++
 		} else {
-			logger.Printf("%d) %s:\n\t%s", cmdNum, res.cmdStr, res.stdout.String())
+			logger.Printf("%d) %s", cmdNum, res.cmdStr)
+			color.Green("\t%s", res.stdout.String())
 		}
 		cmdNum++
 	}
-	logger.Printf("found %d error(s)", numErrs)
 	if numErrs > 0 {
+		color.Red("found %d error(s)", numErrs)
 		os.Exit(1)
 	}
+	color.Green("Everything worked!")
 }
