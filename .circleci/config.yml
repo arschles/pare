@@ -1,0 +1,32 @@
+version: 2
+jobs:
+  build:
+    working_directory: /go/src/github.com/arschles/pare
+    docker:
+      image: quay.io/deis/go-dev:v1.2.0
+    steps:
+      - checkout
+      - run:
+          name: Install Dependencies
+          command: dep ensure
+      - run:
+          name: Run Build
+          command: go build -o pare .
+  test:
+    working_directory: /go/src/github.com/Azure/service-catalog-cli
+    docker:
+       - image: quay.io/deis/go-dev:v1.2.0
+    steps:
+      - checkout
+      - run:
+          name: Install Dependencies
+          command: dep ensure
+      - run:
+          name: Run Tests
+          command: go test ./...
+workflows:
+  version: 2
+  build-and-test:
+    jobs:
+      - build
+      - test
