@@ -60,16 +60,20 @@ func main() {
 	cmdNum := 0
 	for res := range resChan {
 		if res.err != nil {
-			color.Red("'%s' error (%s)", res.cmdStr, res.err)
-			logger.Printf("stdout\n%s", res.stdout.String())
-			logger.Printf("stderr\n%s", res.stderr.String())
+			color.Red("Error running '%s' (%s)", res.cmdStr, res.err)
+			logger.Printf("Stdout")
+			color.Red(res.stdout.String())
+			logger.Printf("Stderr")
+			color.Red(res.stderr.String())
 			numErrs++
 		} else {
 			logger.Printf("%d) %s", cmdNum, res.cmdStr)
-			color.Green("\t%s", res.stdout.String())
+			color.Green("Success!")
 		}
+		logger.Printf("\n")
 		cmdNum++
 	}
+	logger.Printf("\n\n")
 	if numErrs > 0 {
 		color.Red("found %d error(s)", numErrs)
 		os.Exit(1)

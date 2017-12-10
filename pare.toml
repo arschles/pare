@@ -1,1 +1,1 @@
-commands = ["echo hello world", "echo second command"]
+commands = ["go build -o pare .", "go test ./..."]
