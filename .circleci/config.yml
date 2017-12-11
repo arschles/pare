@@ -3,7 +3,9 @@ jobs:
   build:
     working_directory: /go/src/github.com/arschles/pare
     docker:
-      - image: quay.io/deis/go-dev:v1.2.0
+      - image: quay.io/deis/go-dev:v1.6.0
+    environment:
+      - GOPATH: /go
     steps:
       - checkout
       - run:
@@ -15,7 +17,9 @@ jobs:
   test:
     working_directory: /go/src/github.com/arschles/pare
     docker:
-       - image: quay.io/deis/go-dev:v1.2.0
+       - image: quay.io/deis/go-dev:v1.6.0
+    environment:
+      - GOPATH: /go
     steps:
       - checkout
       - run:
@@ -27,7 +31,9 @@ jobs:
   linux:
     working_directory: /go/src/github.com/arschles/pare
     docker:
-      - image: quay.io/deis/go-dev:v1.2.0
+      - image: quay.io/deis/go-dev:v1.6.0
+    environment:
+      - GOPATH: /go
     steps:
       - checkout
       - run:
@@ -47,7 +53,9 @@ jobs:
   darwin:
     working_directory: /go/src/github.com/arschles/pare
     docker:
-      - image: quay.io/deis/go-dev:v1.2.0
+      - image: quay.io/deis/go-dev:v1.6.0
+    environment:
+      - GOPATH: /go
     steps:
       - checkout
       - run:
@@ -67,7 +75,9 @@ jobs:
   windows:
     working_directory: /go/src/github.com/arschles/pare
     docker:
-      - image: quay.io/deis/go-dev:v1.2.0
+      - image: quay.io/deis/go-dev:v1.6.0
+    environment:
+      - GOPATH: /go
     steps:
       - checkout
       - run:
