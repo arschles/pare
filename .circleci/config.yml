@@ -24,9 +24,30 @@ jobs:
       - run:
           name: Run Tests
           command: go test ./...
+  deploy:
+    working_directory: /go/src/github.com/arschles/pare
+    docker:
+      - image: sbani/google-gloud-sdk:slim
+    steps:
+      - checkout
+      - run:
+          name: Activate GCS
+          command: ./activate-gcs.sh
+          working_directory: scripts
+      - run:
+          name: Upload to GCS
+          command: ./upload-to-gcs.sh
+          working_directory: scripts
 workflows:
   version: 2
   build-and-test:
     jobs:
       - build
       - test
+      - deploy:
+          requires:
+            - build
+            - test
+          filters:
+            branches:
+              only: master
