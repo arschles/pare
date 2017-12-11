@@ -35,7 +35,7 @@ jobs:
           command: dep ensure
       - run:
           name: Build for linux
-          command: go build -o cross/pare_linux_amd64 .
+          command: go build -o /crossbuilds/pare_linux_amd64 .
           environment:
             - CGO_ENABLED: 0
             - GOOS: linux
@@ -55,7 +55,7 @@ jobs:
           command: dep ensure
       - run:
           name: Build
-          command:  go build -o cross/pare_darwin_amd64 .
+          command:  go build -o /crossbuilds/pare_darwin_amd64 .
           environment:
             - CGO_ENABLED: 0
             - GOOS: darwin
@@ -75,7 +75,7 @@ jobs:
           command: dep ensure
       - run:
           name: Build for linux
-          command: go build -o cross/pare_windows_amd64.exe .
+          command: go build -o /crossbuilds/pare_windows_amd64.exe .
           environment:
             - CGO_ENABLED: 0
             - GOOS: windows
