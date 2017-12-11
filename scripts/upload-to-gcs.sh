@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # upload cross-compiled link checker binaries
 gsutil -m cp cross/* gs://$GOOGLE_BUCKET/*
 # set uploaded binaries to readable by the public
