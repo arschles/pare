@@ -67,11 +67,11 @@ jobs:
     steps:
       - run:
           name: Activate GCS
-          command: .circleci/scripts/activate-gcs.sh
+          command: .circleci/activate_gcs.sh
           working_directory: scripts
       - run:
           name: Upload to GCS
-          command: .circleci/scripts/upload-to-gcs.sh
+          command: .circleci/upload_gcs.sh
 workflows:
   version: 2
   master:
