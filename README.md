@@ -24,6 +24,8 @@ like this:
 commands = ["echo command 1", "echo command 2"]
 ```
 
+The `pare` CLI looks for a `pare.toml` file in the current working directory when it runs.
+
 If you don't know how to write TOML, don't worry - there's nothing more to the file than
 the above. Put each command in inside double-quotes (`"`), separate them by commas (`,`), and
 surround the entire list with brackets (`[` and `]`).
