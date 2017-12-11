@@ -67,10 +67,12 @@ jobs:
     steps:
       - run:
           name: Activate GCS
-          command: ./scripts/activate-gcs.sh
+          command: ./activate-gcs.sh
+          working_directory: scripts
       - run:
           name: Upload to GCS
-          command: ./scripts/upload-to-gcs.sh
+          command: ./upload-to-gcs.sh
+          working_directory: scripts
 workflows:
   version: 2
   master:
