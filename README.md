@@ -77,7 +77,11 @@ This is set of [key/value pairs](https://github.com/toml-lang/toml#keyvalue-pair
 define what a single command in the target should do. The possible keys are:
 
 - `exec`: a [TOML string](https://github.com/toml-lang/toml#string) that says what Pare
-should run
+should run. This field is required
 - `crash`: a [TOML boolean](https://github.com/toml-lang/toml#user-content-boolean) that says
 whether Pare should crash if this command exits with a code other than `0` (i.e. a failure).
-If the command does fail, then Pare will exit with a code of `1`.
+If the command does fail, then Pare will exit with a code of `1`. This defaults to `false`
+- `directory`: a [TOML string](https://github.com/toml-lang/toml#string) that tells
+Pare what directory to run the command in. When the command runs, this will be the current
+working directory of the command. This defaults to the current working directory that `pare`
+is executed in
