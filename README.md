@@ -6,6 +6,8 @@ Pare is a build tool for modern software develompent. It focuses on enabling you
 tools that you need when you need them, so you don't have to write hacky Makefiles or learn complicated
 new build systems.
 
+You can configure Pare with a single file, often times with one line.
+
 # What does this do?
 
 Imagine you're building a website that needs a bunch of daemons running (microservices!). Normally
