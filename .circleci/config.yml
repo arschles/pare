@@ -7,10 +7,10 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Dependencies
+          name: Install dependencies
           command: dep ensure
       - run:
-          name: Run Build
+          name: Run build
           command: go build -o pare .
   test:
     working_directory: /go/src/github.com/arschles/pare
@@ -19,17 +19,52 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Dependencies
+          name: Install dependencies
           command: dep ensure
       - run:
-          name: Run Tests
+          name: Run tests
           command: go test ./...
+  linux:
+    working_directory: /go/src/github.com/arschles/pare
+    docker:
+      - image: quay.io/deis/go-dev:v1.2.0
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: dep ensure
+      - run:
+          name: Build for linux
+          command: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 -o cross/pare_linux_amd64 .
+  darwin:
+    working_directory: /go/src/github.com/arschles/pare
+    docker:
+      - image: quay.io/deis/go-dev:v1.2.0
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: dep ensure
+      - run:
+          name: Build
+          command: CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 -o cross/pare_darwin_amd64 .
+  windows:
+    working_directory: /go/src/github.com/arschles/pare
+    docker:
+      - image: quay.io/deis/go-dev:v1.2.0
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: dep ensure
+      - run:
+          name: Build for linux
+          command: CGO_ENABLED=0 GOOS=windows GOARCH=amd64 -o cross/pare_windows_amd64.exe .
   deploy:
     working_directory: /go/src/github.com/arschles/pare
     docker:
-      - image: sbani/google-gloud-sdk:slim
+      - image: google/cloud-sdk:alpine
     steps:
-      - checkout
       - run:
           name: Activate GCS
           command: ./activate-gcs.sh
