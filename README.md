@@ -36,13 +36,48 @@ Pare configuration files are simple. They are written in
 Here's an example file:
 
 ```toml
-[targets.mytarget]
-commands = ["echo command 1", "echo command 2"]
+[targets.MY_TARGET.commands.COMMAND_1]
+exec = "echo command 1"
+[targets.MY_TARGET.command.COMMAND_2]
+exec = "echo command 2"
 ```
 
-There's nothing more to it! When you run `pare run mytarget`, all the commands you
-put in the list (between the `[` and `]`) will be executed in parallel, and `pare`
-will exit after they all finish.
+When you run `pare run `, all the commands you put in the list 
+(between the `[` and `]`) will be executed in parallel, and `pare` will exit after 
+they all finish. Please see the [config file reference](#config-file-reference) below
+for details on the file format.
 
 >If you don't know how to write TOML, don't worry - there's nothing more to the file than the above. Put each command in inside double-quotes (`"`), separate them by commas (`,`), and surround the entire list with brackets (`[` and `]`).
 
+# Config File Reference
+
+All config files should be named `pare.toml`. This section outlines all the possible values
+that Pare supports in the config files. You'll need to be familiar with 
+[TOML](https://github.com/toml-lang/toml) to understand this section.
+
+## `targets`
+
+This is a [TOML table](https://github.com/toml-lang/toml#table) that contains one or more
+`Target` rows in it.
+
+### `targets.TARGET_NAME`
+
+This is a [TOML table](https://github.com/toml-lang/toml#table) that represents a Pare build
+target. It contains one or more `Command` rows in it. In your config file, replace `TARGET_NAME`
+with your real target name.
+
+#### `targets.TARGET_NAME.commands`
+
+This is a [TOML table](https://github.com/toml-lang/toml#table) that represents the commands
+to go in the target.
+
+##### `targets.TARGET_NAME.commands.COMMAND_NAME`
+
+This is set of [key/value pairs](https://github.com/toml-lang/toml#keyvalue-pair) that
+define what a single command in the target should do. The possible keys are:
+
+- `exec`: a [TOML string](https://github.com/toml-lang/toml#string) that says what Pare
+should run
+- `crash`: a [TOML boolean](https://github.com/toml-lang/toml#user-content-boolean) that says
+whether Pare should crash if this command exits with a code other than `0` (i.e. a failure).
+If the command does fail, then Pare will exit with a code of `1`.
