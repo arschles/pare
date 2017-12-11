@@ -102,7 +102,6 @@ jobs:
       - run:
           name: Upload to GCS
           command: |
-            ls -la cross
             gsutil -m cp -r /crossbuilds/* gs://$GOOGLE_BUCKET
             gsutil -m acl -r set public-read gs://$GOOGLE_BUCKET/*
             gsutil -m setmeta -h "Cache-Control:public, max-age=0" gs://$GOOGLE_BUCKET/*
