@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: /go/src/github.com/arschles/pare
     docker:
-      image: quay.io/deis/go-dev:v1.2.0
+      - image: quay.io/deis/go-dev:v1.2.0
     steps:
       - checkout
       - run:
