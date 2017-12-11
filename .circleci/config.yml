@@ -139,3 +139,30 @@ workflows:
           filters:
             branches:
               only: master
+  pr:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore:
+                - master
+      - test:
+          filters:
+            branches:
+              ignore:
+                - master
+      - linux:
+          filters:
+            branches:
+              ignore:
+                - master
+      - darwin:
+          filters:
+              branches:
+                ignore:
+                  - master
+      - windows:
+          filters:
+            branches:
+              ignore:
+                - master
