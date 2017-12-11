@@ -67,11 +67,18 @@ jobs:
     steps:
       - run:
           name: Activate GCS
-          command: .gcs_activate.sh
+          command: |
+            echo $GOOGLE_JSON >> secret.json
+            gcloud auth activate-service-account $GOOGLE_ACCOUNT --key-file secret.json
           working_directory: scripts
+          environment:
+            - CLOUDSDK_PYTHON_SITEPACKAGES: 1
       - run:
           name: Upload to GCS
-          command: .gcs_upload.sh
+          command: |
+            gsutil -m cp cross/* gs://$GOOGLE_BUCKET/*
+            gsutil -m acl set public-read gs://$GOOGLE_BUCKET/*
+            gsutil -m setmeta -h "Cache-Control:public, max-age=0" gs://$GOOGLE_BUCKET/*
 workflows:
   version: 2
   master:
