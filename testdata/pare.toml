@@ -1,0 +1,2 @@
+[targets.build]
+commands = ["echo 1", "sleep 2"]
