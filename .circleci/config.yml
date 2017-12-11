@@ -91,10 +91,25 @@ workflows:
           filters:
             branches:
               only: master
+      - linux:
+          filters:
+            branches:
+              only: master
+      - darwin:
+          filters:
+              branches:
+                only: master
+      - windows:
+          filters:
+            branches:
+              only: master
       - deploy:
           requires:
             - build
             - test
+            - linux
+            - darwin
+            - windows
           filters:
             branches:
               only: master
