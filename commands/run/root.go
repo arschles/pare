@@ -47,15 +47,15 @@ func run(cmd *cobra.Command, args []string) error {
 		wg.Add(1)
 		c := make(chan cmdResult)
 		go func(cmd *config.Command, resCh chan<- cmdResult) {
-			cmdStr := cmd.Exec
 			defer close(resCh)
-			if cmdStr == "" {
+			if cmd.Exec == "" {
 				return
 			}
-			spl := strings.Split(cmdStr, " ")
+			spl := strings.Split(cmd.Exec, " ")
 			first := spl[0]
 			rest := spl[1:]
 			runnable := exec.Command(first, rest...)
+			runnable.Dir = cmd.Directory
 			stdoutBuf := new(bytes.Buffer)
 			stderrBuf := new(bytes.Buffer)
 			runnable.Stdout = stdoutBuf
