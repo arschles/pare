@@ -40,6 +40,10 @@ jobs:
             - CGO_ENABLED: 0
             - GOOS: linux
             - GOARCH: amd64
+      - persist_to_workspace:
+          root: /crossbuilds
+          paths:
+            - pare_linux_amd64
   darwin:
     working_directory: /go/src/github.com/arschles/pare
     docker:
@@ -56,6 +60,10 @@ jobs:
             - CGO_ENABLED: 0
             - GOOS: darwin
             - GOARCH: amd64
+      - persist_to_workspace:
+          root: /crossbuilds
+          paths:
+            - pare_darwin_amd64
   windows:
     working_directory: /go/src/github.com/arschles/pare
     docker:
@@ -72,11 +80,17 @@ jobs:
             - CGO_ENABLED: 0
             - GOOS: windows
             - GOARCH: amd64
+      - persist_to_workspace:
+          root: /crossbuilds
+          paths:
+            - pare_windows_amd64.exe
   deploy:
     working_directory: /go/src/github.com/arschles/pare
     docker:
       - image: google/cloud-sdk:slim
     steps:
+      - attach_workspace:
+          at: /crossbuilds
       - run:
           name: Activate GCS
           command: |
@@ -89,7 +103,7 @@ jobs:
           name: Upload to GCS
           command: |
             ls -la cross
-            gsutil -m cp -r cross/* gs://$GOOGLE_BUCKET
+            gsutil -m cp -r /crossbuilds/* gs://$GOOGLE_BUCKET
             gsutil -m acl -r set public-read gs://$GOOGLE_BUCKET/*
             gsutil -m setmeta -h "Cache-Control:public, max-age=0" gs://$GOOGLE_BUCKET/*
 workflows:
