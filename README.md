@@ -7,7 +7,7 @@ tools when you need them, so you don't have to write hacky Makefiles or learn co
 
 You can configure Pare with a single one-line file, or you can build more advanced workflows.
 
-# What does this do?
+# What does it do?
 
 Imagine you're building a website that needs a bunch of daemons running (microservices!). Normally
 you'd open up a few terminal windows and run each one in a new window. But that's a pain!
@@ -28,19 +28,20 @@ for your system (see the links below) and put it in your executable path:
 
 # Configuring
 
-The `pare` CLI looks for a `pare.toml` file in the current working directory when it runs. This file
-holds the commands that `pare` should run.
+The `pare` CLI looks for a `pare.toml` file in the current working directory when it runs. This file holds the commands that `pare` should run.
 
-Pare configuration files are simple. They are written in [TOML](https://github.com/toml-lang/toml) and usually only 
-have one line.
+Pare configuration files are simple. They are written in 
+[TOML](https://github.com/toml-lang/toml) and usually only have one line.
 
 Here's an example file:
 
 ```toml
+[targets.mytarget]
 commands = ["echo command 1", "echo command 2"]
 ```
 
-There's nothing more to it! All the commands in the list you give will be executed in parallel, and `pare`
+There's nothing more to it! When you run `pare run mytarget`, all the commands you
+put in the list (between the `[` and `]`) will be executed in parallel, and `pare`
 will exit after they all finish.
 
 >If you don't know how to write TOML, don't worry - there's nothing more to the file than the above. Put each command in inside double-quotes (`"`), separate them by commas (`,`), and surround the entire list with brackets (`[` and `]`).
