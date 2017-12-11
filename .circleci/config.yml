@@ -69,7 +69,7 @@ jobs:
           name: Activate GCS
           command: |
             echo $GOOGLE_JSON >> secret.json
-            gcloud auth activate-service-account $GOOGLE_ACCOUNT --key-file secret.json
+            gcloud auth activate-service-account --key-file secret.json
           working_directory: scripts
           environment:
             - CLOUDSDK_PYTHON_SITEPACKAGES: 1
