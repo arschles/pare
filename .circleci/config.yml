@@ -63,15 +63,15 @@ jobs:
   deploy:
     working_directory: /go/src/github.com/arschles/pare
     docker:
-      - image: google/cloud-sdk:alpine
+      - image: google/cloud-sdk:slim
     steps:
       - run:
           name: Activate GCS
-          command: .circleci/activate_gcs.sh
+          command: .gcs_activate.sh
           working_directory: scripts
       - run:
           name: Upload to GCS
-          command: .circleci/upload_gcs.sh
+          command: .gcs_upload.sh
 workflows:
   version: 2
   master:

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/ash
 
 # upload cross-compiled link checker binaries
 gsutil -m cp cross/* gs://$GOOGLE_BUCKET/*
