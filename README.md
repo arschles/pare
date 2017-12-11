@@ -2,7 +2,9 @@
 
 [![CircleCI](https://circleci.com/gh/arschles/pare.svg?style=svg)](https://circleci.com/gh/arschles/pare)
 
-Pare is a build tool that focuses on getting your work done quickly and efficiently.
+Pare is a build tool for modern software develompent. It focuses on enabling you to easily run _all_ the 
+tools that you need when you need them, so you don't have to write hacky Makefiles or learn complicated
+new build systems.
 
 # What does this do?
 
