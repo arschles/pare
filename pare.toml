@@ -1,1 +1,2 @@
+[targets.build]
 commands = ["go build -o pare .", "go test ./..."]
