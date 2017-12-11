@@ -3,6 +3,7 @@ package run
 import (
 	"bytes"
 	"fmt"
+	"os"
 	"os/exec"
 	"strings"
 	"sync"
@@ -42,10 +43,11 @@ func run(cmd *cobra.Command, args []string) error {
 
 	var wg sync.WaitGroup
 	resChan := make(chan cmdResult)
-	for i, cmdStr := range target.Commands {
+	for cmdName, cmd := range target.Commands {
 		wg.Add(1)
 		c := make(chan cmdResult)
-		go func(cmdNum int, cmdStr string, resCh chan<- cmdResult) {
+		go func(cmd *config.Command, resCh chan<- cmdResult) {
+			cmdStr := cmd.Exec
 			defer close(resCh)
 			if cmdStr == "" {
 				return
@@ -53,19 +55,21 @@ func run(cmd *cobra.Command, args []string) error {
 			spl := strings.Split(cmdStr, " ")
 			first := spl[0]
 			rest := spl[1:]
-			cmd := exec.Command(first, rest...)
+			runnable := exec.Command(first, rest...)
 			stdoutBuf := new(bytes.Buffer)
 			stderrBuf := new(bytes.Buffer)
-			cmd.Stdout = stdoutBuf
-			cmd.Stderr = stderrBuf
-			err := cmd.Run()
+			runnable.Stdout = stdoutBuf
+			runnable.Stderr = stderrBuf
+			err := runnable.Run()
 			resCh <- cmdResult{
-				cmdStr: cmdStr,
-				stdout: stdoutBuf,
-				stderr: stderrBuf,
-				err:    err,
+				cmdName: cmdName,
+				cfgCmd:  cmd,
+				stdout:  stdoutBuf,
+				stderr:  stderrBuf,
+				err:     err,
+				crash:   cmd.Crash,
 			}
-		}(i, cmdStr, c)
+		}(cmd, c)
 		go func(ch <-chan cmdResult) {
 			defer wg.Done()
 			res := <-ch
@@ -77,21 +81,23 @@ func run(cmd *cobra.Command, args []string) error {
 		close(resChan)
 	}()
 	numErrs := 0
-	cmdNum := 0
 	for res := range resChan {
+		cmdStr := res.cfgCmd.Exec
 		if res.err != nil {
-			color.Red("Error running '%s' (%s)", res.cmdStr, res.err)
-			logger.Printf("Stdout")
+			color.Red("Error running '%s' (%s)", cmdStr, res.err)
+			logger.Printf("Stdout:")
 			color.Red(res.stdout.String())
-			logger.Printf("Stderr")
+			logger.Printf("Stderr:")
 			color.Red(res.stderr.String())
+			if res.crash {
+				os.Exit(1)
+			}
 			numErrs++
 		} else {
-			logger.Printf("%d) %s", cmdNum, res.cmdStr)
+			logger.Printf("%s", cmdStr)
 			color.Green("Success!")
 		}
 		logger.Printf("\n")
-		cmdNum++
 	}
 	logger.Printf("\n\n")
 	if numErrs > 0 {
