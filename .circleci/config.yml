@@ -35,7 +35,11 @@ jobs:
           command: dep ensure
       - run:
           name: Build for linux
-          command: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 -o cross/pare_linux_amd64 .
+          command: go build -o cross/pare_linux_amd64 .
+          environment:
+            - CGO_ENABLED: 0
+            - GOOS: linux
+            - GOARCH: amd64
   darwin:
     working_directory: /go/src/github.com/arschles/pare
     docker:
@@ -47,7 +51,11 @@ jobs:
           command: dep ensure
       - run:
           name: Build
-          command: CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 -o cross/pare_darwin_amd64 .
+          command:  go build -o cross/pare_darwin_amd64 .
+          environment:
+            - CGO_ENABLED: 0
+            - GOOS: darwin
+            - GOARCH: amd64
   windows:
     working_directory: /go/src/github.com/arschles/pare
     docker:
@@ -59,7 +67,11 @@ jobs:
           command: dep ensure
       - run:
           name: Build for linux
-          command: CGO_ENABLED=0 GOOS=windows GOARCH=amd64 -o cross/pare_windows_amd64.exe .
+          command: go build -o cross/pare_windows_amd64.exe .
+          environment:
+            - CGO_ENABLED: 0
+            - GOOS: windows
+            - GOARCH: amd64
   deploy:
     working_directory: /go/src/github.com/arschles/pare
     docker:
