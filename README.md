@@ -4,6 +4,14 @@
 
 Pare is a build tool that focuses on getting your work done quickly and efficiently.
 
+# What does this do?
+
+Imagine you're building a website that needs a bunch of daemons running (microservices!). Normally
+you'd open up a few terminal windows and run each one in a new window. But that's a pain!
+
+Pare can run all of your daemons with a single command. Just tell it what to run in a simple 
+[configuration file](#configuring) and run `pare`. The command takes over from there.
+
 # Installing
 
 The `pare` CLI is distributed as a self-contained binary. You don't have to download any
@@ -17,16 +25,20 @@ for your system (see the links below) and put it in your executable path:
 
 # Configuring
 
-You configure Pare with a very simple [TOML](https://github.com/toml-lang/toml) file. It looks
-like this:
+The `pare` CLI looks for a `pare.toml` file in the current working directory when it runs. This file
+holds the commands that `pare` should run.
+
+Pare configuration files are simple. They are written in [TOML](https://github.com/toml-lang/toml) and usually only 
+have one line.
+
+Here's an example file:
 
 ```toml
 commands = ["echo command 1", "echo command 2"]
 ```
 
-The `pare` CLI looks for a `pare.toml` file in the current working directory when it runs.
+There's nothing more to it! All the commands in the list you give will be executed in parallel, and `pare`
+will exit after they all finish.
 
-If you don't know how to write TOML, don't worry - there's nothing more to the file than
-the above. Put each command in inside double-quotes (`"`), separate them by commas (`,`), and
-surround the entire list with brackets (`[` and `]`).
+>If you don't know how to write TOML, don't worry - there's nothing more to the file than the above. Put each command in inside double-quotes (`"`), separate them by commas (`,`), and surround the entire list with brackets (`[` and `]`).
 
