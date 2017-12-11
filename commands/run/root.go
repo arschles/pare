@@ -2,6 +2,7 @@ package run
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"os"
 	"os/exec"
@@ -41,12 +42,15 @@ func run(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("no target '%s' was in the config file", targetName)
 	}
 
+	startCtx, startFunc := context.WithCancel(context.Background())
 	var wg sync.WaitGroup
 	resChan := make(chan cmdResult)
 	for cmdName, cmd := range target.Commands {
+		logger.Printf("-----> %s", cmd.Exec)
 		wg.Add(1)
 		c := make(chan cmdResult)
 		go func(cmd *config.Command, resCh chan<- cmdResult) {
+			<-startCtx.Done()
 			defer close(resCh)
 			if cmd.Exec == "" {
 				return
@@ -76,6 +80,7 @@ func run(cmd *cobra.Command, args []string) error {
 			resChan <- res
 		}(c)
 	}
+	startFunc()
 	go func() {
 		wg.Wait()
 		close(resChan)
