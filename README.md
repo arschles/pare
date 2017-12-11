@@ -2,11 +2,10 @@
 
 [![CircleCI](https://circleci.com/gh/arschles/pare.svg?style=svg)](https://circleci.com/gh/arschles/pare)
 
-Pare is a build tool for modern software develompent. It focuses on enabling you to easily run _all_ the 
-tools that you need when you need them, so you don't have to write hacky Makefiles or learn complicated
-new build systems.
+Pare is a build tool for modern software develompent. It focuses on making it easy to run _all_ your development
+tools when you need them, so you don't have to write hacky Makefiles or learn complicated new build systems.
 
-You can configure Pare with a single file, often times with one line.
+You can configure Pare with a single one-line file, or you can build more advanced workflows.
 
 # What does this do?
 
