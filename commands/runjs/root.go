@@ -1,4 +1,4 @@
-package run
+package runjs
 
 import (
 	"github.com/spf13/cobra"
@@ -7,10 +7,9 @@ import (
 // Root returns the command for the root of the 'pare run' command tree
 func Root() *cobra.Command {
 	return &cobra.Command{
-		Use:     "run [target]",
-		Aliases: []string{"r"},
+		Use:     "runjs [target]",
 		Short:   "run a target",
-		Example: `pare run mytarget`,
+		Example: `pare runjs mytarget`,
 		RunE:    run,
 	}
 }

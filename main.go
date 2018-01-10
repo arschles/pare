@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/arschles/pare/commands/run"
+	"github.com/arschles/pare/commands/runjs"
 	"github.com/spf13/cobra"
 )
 
@@ -18,7 +19,7 @@ func main() {
 	}{}
 	cmd := &cobra.Command{
 		Use:                "pare",
-		Short:              "The modern software build tool for modern software development",
+		Short:              "The build tool for modern software development",
 		SilenceUsage:       true,
 		DisableSuggestions: false,
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -36,6 +37,7 @@ func main() {
 	cmdFlags.Parse(os.Args)
 
 	cmd.AddCommand(run.Root())
+	cmd.AddCommand(runjs.Root())
 
 	if err := cmd.Execute(); err != nil {
 		os.Exit(1)

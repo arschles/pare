@@ -32,6 +32,12 @@
   version = "v0.0.3"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/robertkrimen/otto"
+  packages = [".","ast","dbg","file","parser","registry","token"]
+  revision = "3b44b4dcb6c00477273595c312908e2412d07da6"
+
+[[projects]]
   name = "github.com/spf13/cobra"
   packages = ["."]
   revision = "7b2c5ac9fc04fc5efafb60700713d4fa609b777b"
@@ -49,9 +55,15 @@
   packages = ["unix"]
   revision = "b8f5ef32195cae6470b728e8ca677f0dbed1a004"
 
+[[projects]]
+  name = "gopkg.in/sourcemap.v1"
+  packages = [".","base64vlq"]
+  revision = "6e83acea0053641eff084973fee085f0c193c61a"
+  version = "v1.0.5"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "b257431a0dc9b966fdcb8acaa043972732a3ecbab4136563cfb20eeaf2d17256"
+  inputs-digest = "1c8fcc945c93dd688ba10ffb7f3fc3958cf77b77dd1ca8f0d6ef8e7f46d4d543"
   solver-name = "gps-cdcl"
   solver-version = 1
