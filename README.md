@@ -23,7 +23,7 @@ your scripts that let you do things like this:
 - Execute commands in Docker containers (TODO)
 
 All this functionality means that you can execute plain builds and tests
-(like `go test` or `npm test`), but you can also do more complex things like:
+(like `go build` or `npm test`), but you can also do more complex things like:
 
 - Run unit tests, and fail immediately if the tests failed
 - Launch the development database
