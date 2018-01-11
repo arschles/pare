@@ -2,6 +2,9 @@
 
 [![CircleCI](https://circleci.com/gh/arschles/pare.svg?style=svg)](https://circleci.com/gh/arschles/pare)
 
+_This project is alpha. Interface and features may change. This message will be removed
+when the project reaches beta._
+
 Pare is a build and workflow tool for modern software develompent. It focuses on making it easy 
 to run _all_ your development tools when you need them, so you don't have to write hacky 
 Makefiles or learn complicated new build systems.
@@ -45,65 +48,4 @@ After you install the CLI, write your Javascript and run `pare run mytarget`
 
 # Writing your build script
 
-TODO...
-
-The `pare` CLI looks for a `pare.toml` file in the current working directory when it runs. This file holds the commands that `pare` should run.
-
-Pare configuration files are simple. They are written in 
-[TOML](https://github.com/toml-lang/toml) and usually only have one line.
-
-Here's an example file:
-
-```toml
-[targets.MY_TARGET.commands.COMMAND_1]
-exec = "echo command 1"
-[targets.MY_TARGET.command.COMMAND_2]
-exec = "echo command 2"
-```
-
-When you run `pare run `, all the commands you put in the list 
-(between the `[` and `]`) will be executed in parallel, and `pare` will exit after 
-they all finish. Please see the [config file reference](#config-file-reference) below
-for details on the file format.
-
->If you don't know how to write TOML, don't worry - there's nothing more to the file than the above. Put each command in inside double-quotes (`"`), separate them by commas (`,`), and surround the entire list with brackets (`[` and `]`).
-
-# Config File Reference
-
-All config files should be named `pare.toml`. This section outlines all the possible values
-that Pare supports in the config files. You'll need to be familiar with 
-[TOML](https://github.com/toml-lang/toml) to understand this section.
-
-## `targets`
-
-This is a [TOML table](https://github.com/toml-lang/toml#table) that contains one or more
-`Target` rows in it.
-
-### `targets.TARGET_NAME`
-
-This is a [TOML table](https://github.com/toml-lang/toml#table) that represents a Pare build
-target. It contains one or more `Command` rows in it. In your config file, replace `TARGET_NAME`
-with your real target name.
-
-#### `targets.TARGET_NAME.commands`
-
-This is a [TOML table](https://github.com/toml-lang/toml#table) that represents the commands
-to go in the target.
-
-##### `targets.TARGET_NAME.commands.COMMAND_NAME`
-
-This is set of [key/value pairs](https://github.com/toml-lang/toml#keyvalue-pair) that
-define what a single command in the target should do. The possible keys are:
-
-- `exec`: a [TOML string](https://github.com/toml-lang/toml#string) that says what Pare
-should run
-    - This value is required
-- `crash`: a [TOML boolean](https://github.com/toml-lang/toml#user-content-boolean) that says
-whether Pare should crash if this command exits with a code other than `0` (i.e. a failure).
-    - If the command does fail, then Pare will exit with a code of `1`. Other commands might still 
-    get a chance to execute even if this command fails, so don't rely on this for flow control.
-    - This value defaults to `false`
-- `directory`: a [TOML string](https://github.com/toml-lang/toml#string) that tells
-Pare what directory to run the command in. When the command runs, this will be the current
-working directory of the command.
-    - This value defaults to the current working directory that `pare` is executed in (i.e. `.`)
+TODO
