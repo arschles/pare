@@ -11,18 +11,28 @@ Makefiles or learn complicated new build systems.
 
 Instead, you just write Javascript to define your workflow. 
 
-# What is a workflow?
+# What's a workflow?
 
-The Javascript you write isn't just plain Javascript. Pare provides powerful functions to use in 
-your scripts that let you do things like this:
+A workflow is all the things you need to develop your software, including:
+
+- Build
+- Test
+- Run development servers
+- Watch files in the background
+- Run a release
+
+Pare enables all of this functionality by providing powerful functions to use in your Javascript
+build definition files. These functions let you do things like this:
 
 - Execute commands
 - Return errors with custom messages and exit codes
 - Execute commands concurrently (TODO)
 - Execute commands in Docker containers (TODO)
 
-All this functionality means that you can execute plain builds and tests
-(like `go build` or `npm test`), but you can also do more complex things like:
+# Example Workflows
+
+All this functionality means that you can execute plain builds and tests (like `go build` or 
+`npm test`), but you can also build more complex workflows like this one:
 
 - Run unit tests, and fail immediately if the tests failed
 - Launch the development database
