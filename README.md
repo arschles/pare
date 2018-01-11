@@ -1,4 +1,4 @@
-# Pare - a Modern Build Tool for Modern Software Development
+# Pare
 
 [![CircleCI](https://circleci.com/gh/arschles/pare.svg?style=svg)](https://circleci.com/gh/arschles/pare)
 
