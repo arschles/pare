@@ -18,7 +18,7 @@ func main() {
 	}{}
 	cmd := &cobra.Command{
 		Use:                "pare",
-		Short:              "The modern software build tool for modern software development",
+		Short:              "The build tool for modern software development",
 		SilenceUsage:       true,
 		DisableSuggestions: false,
 		RunE: func(cmd *cobra.Command, args []string) error {

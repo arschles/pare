@@ -1,90 +1,141 @@
-# Pare - a Modern Build Tool for Modern Software Development
+# Pare
 
 [![CircleCI](https://circleci.com/gh/arschles/pare.svg?style=svg)](https://circleci.com/gh/arschles/pare)
 
-Pare is a build tool for modern software develompent. It focuses on making it easy to run _all_ your development
-tools when you need them, so you don't have to write hacky Makefiles or learn complicated new build systems.
+_This project is alpha. Interface and features may change. This message will be removed
+when the project reaches beta._
 
-You can configure Pare with a single one-line file, or you can build more advanced workflows.
+Pare is a build and workflow tool for modern software develompent. It focuses on making it easy 
+to run _all_ your development tools when you need them, so you don't have to write hacky 
+Makefiles or learn complicated new build systems.
 
-# What does it do?
+Instead, you just write Javascript to define your workflow. 
 
-Imagine you're building a website that needs a bunch of daemons running (microservices!). Normally
-you'd open up a few terminal windows and run each one in a new window. But that's a pain!
+# What's a workflow?
 
-Pare can run all of your daemons with a single command. Just tell it what to run in a simple 
-[configuration file](#configuring) and run `pare`. The command takes over from there.
+A workflow is all the things you need to develop your software, including:
+
+- Build
+- Test
+- Run development servers
+- Watch files in the background
+- Run a release
+
+Pare enables all of this functionality by providing powerful functions to use in your Javascript
+build definition files. These functions let you do things like this:
+
+- Execute commands
+- Return errors with custom messages and exit codes
+- Execute commands concurrently (TODO)
+- Execute commands in Docker containers (TODO)
+
+# Example Workflows
+
+All this functionality means that you can execute plain builds and tests (like `go build` or 
+`npm test`), but you can also build more complex workflows like this one:
+
+- Run unit tests, and fail immediately if the tests failed
+- Launch the development database
+- Run the frontend webpack development server
+- Run the backend API server
+- Wait until all these services launched properly
+- Run your integration tests against the frontend
+- Exit 0 only if everything came up properly and the integration tests passed
 
 # Installing
 
-The `pare` CLI is distributed as a self-contained binary. You don't have to download any
-dependencies or run any special installer. Binaries are distributed for Linux (64 bit),
-Windows (64 bit), and Mac OS X (64 bit). To install, download the appropriate CLI
-for your system (see the links below) and put it in your executable path:
+The `pare` CLI is distributed as a self-contained binary. It includes everything
+you need - even the Javascript runtime for your build scripts.
+
+Binaries are distributed for Linux (64 bit), Windows (64 bit), and Mac OS X 
+(64 bit). To install, download the appropriate CLI for your system (see the 
+links below) and put it in your executable path:
 
 - [Linux (64 bit)](https://storage.googleapis.com/pare-cli/pare_linux_amd64)
 - [Mac OS X (64 bit)](https://storage.googleapis.com/pare-cli/pare_darwin_amd64)
 - [Windows (64 bit)](https://storage.googleapis.com/pare-cli/pare_windows_amd64.exe)
 
-# Configuring
+After you install the CLI, write your Javascript and run `pare run mytarget`
 
-The `pare` CLI looks for a `pare.toml` file in the current working directory when it runs. This file holds the commands that `pare` should run.
+# Writing your build script
 
-Pare configuration files are simple. They are written in 
-[TOML](https://github.com/toml-lang/toml) and usually only have one line.
+A build script is a collection of Javascript functions and calls to `addTarget`. Here is an
+example build script that's adapted from [pare's own build script](./pare.js):
 
-Here's an example file:
-
-```toml
-[targets.MY_TARGET.commands.COMMAND_1]
-exec = "echo command 1"
-[targets.MY_TARGET.command.COMMAND_2]
-exec = "echo command 2"
+```javascript
+function build() {
+    var binaryOutput = "./pare"
+    var exit = cmd("go", "build", "-o", binaryOutput, ".")
+    if (exit != 0) {
+        return error(1, "build failed!")
+    }
+    return success("binary has been output to " + binaryOutput)
+}
+addTarget("buildcli", build)
 ```
 
-When you run `pare run `, all the commands you put in the list 
-(between the `[` and `]`) will be executed in parallel, and `pare` will exit after 
-they all finish. Please see the [config file reference](#config-file-reference) below
-for details on the file format.
+In this script, we define a `build` function, which calls `go build` to compile the `pare` binary.
+After we define the function, we call `addTarget`, which exposes the function to the `pare run`
+command. In this script, we tell Pare to expose a `buildcli` target that will run the `build`
+function.
 
->If you don't know how to write TOML, don't worry - there's nothing more to the file than the above. Put each command in inside double-quotes (`"`), separate them by commas (`,`), and surround the entire list with brackets (`[` and `]`).
+In other words, when `pare run buildcli` is called on the command line, the `build` function 
+in the Javascript file will be called.
 
-# Config File Reference
+# Javascript Reference
 
-All config files should be named `pare.toml`. This section outlines all the possible values
-that Pare supports in the config files. You'll need to be familiar with 
-[TOML](https://github.com/toml-lang/toml) to understand this section.
+Pare uses the [otto](https://github.com/robertkrimen/otto) Javascript interpreter to execute
+Javascript. It's simple Javascript - think closer to ECMAScript 5 than 6 or 7.
 
-## `targets`
+On top of the standard Javascript, Pare adds a few extra functions. These are what you should
+use to make your build script powerful. Here they are:
 
-This is a [TOML table](https://github.com/toml-lang/toml#table) that contains one or more
-`Target` rows in it.
+## `cmd`
 
-### `targets.TARGET_NAME`
+This function runs a command on the host. It pipes `STDOUT` from the command to the host's
+standard out, and similarly pipes `STDERR` from the command to the host's standard error.
 
-This is a [TOML table](https://github.com/toml-lang/toml#table) that represents a Pare build
-target. It contains one or more `Command` rows in it. In your config file, replace `TARGET_NAME`
-with your real target name.
+Call this function by splitting your command into individual pieces:
 
-#### `targets.TARGET_NAME.commands`
+```javascript
+var exit = cmd("npm", "test")
+```
 
-This is a [TOML table](https://github.com/toml-lang/toml#table) that represents the commands
-to go in the target.
+The return value of `cmd` will be the exit code of the command.
 
-##### `targets.TARGET_NAME.commands.COMMAND_NAME`
+## `error`
 
-This is set of [key/value pairs](https://github.com/toml-lang/toml#keyvalue-pair) that
-define what a single command in the target should do. The possible keys are:
+This function returns an error that you define. Call it by providing a numeric exit
+code and a string description:
 
-- `exec`: a [TOML string](https://github.com/toml-lang/toml#string) that says what Pare
-should run
-    - This value is required
-- `crash`: a [TOML boolean](https://github.com/toml-lang/toml#user-content-boolean) that says
-whether Pare should crash if this command exits with a code other than `0` (i.e. a failure).
-    - If the command does fail, then Pare will exit with a code of `1`. Other commands might still 
-    get a chance to execute even if this command fails, so don't rely on this for flow control.
-    - This value defaults to `false`
-- `directory`: a [TOML string](https://github.com/toml-lang/toml#string) that tells
-Pare what directory to run the command in. When the command runs, this will be the current
-working directory of the command.
-    - This value defaults to the current working directory that `pare` is executed in (i.e. `.`)
+```javascript
+return error(1, "the thing failed!")
+```
+
+You should always want to put `return` in front of this function because pare 
+knows how to convert the return value of `error` into nicely formatted output.
+
+## `success`
+
+This function prints a custom message indicating a successful run
+(Pare will print it in green text where it can) and causes your program to `exit 0`.
+
+You should always put a `return` in front of this function because Pare knows
+how to convert the return value of `success` into nicely formatted output.
+
+## `addTarget`
+
+This function tells Pare about a new target that it should expose on the command line.
+Pass it a string name and a function:
+
+```javascript
+func build() {
+    ...
+}
+
+addTarget("build", build)
+```
+
+In the above example, you'll be able to execute `pare run build` on the command line, and Pare
+will execute the `build` function for you. You can name your targets anything you want,
+even if they are not the same as the actual Javascript function.
