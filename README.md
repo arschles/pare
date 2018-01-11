@@ -42,12 +42,14 @@ All this functionality means that you can execute plain builds and tests (like `
 - Run your integration tests against the frontend
 - Exit 0 only if everything came up properly and the integration tests passed
 
-# I'm interested, how do I install this thing?
+# Installing
 
-The `pare` CLI is distributed as a self-contained binary. You don't have to download any
-dependencies or run any special installer. Binaries are distributed for Linux (64 bit),
-Windows (64 bit), and Mac OS X (64 bit). To install, download the appropriate CLI
-for your system (see the links below) and put it in your executable path:
+The `pare` CLI is distributed as a self-contained binary. It includes everything
+you need - even the Javascript runtime for your build scripts.
+
+Binaries are distributed for Linux (64 bit), Windows (64 bit), and Mac OS X 
+(64 bit). To install, download the appropriate CLI for your system (see the 
+links below) and put it in your executable path:
 
 - [Linux (64 bit)](https://storage.googleapis.com/pare-cli/pare_linux_amd64)
 - [Mac OS X (64 bit)](https://storage.googleapis.com/pare-cli/pare_darwin_amd64)
