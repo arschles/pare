@@ -17,8 +17,7 @@ The Javascript you write isn't just plain Javascript. Pare provides powerful fun
 your scripts that let you do things like this:
 
 - Execute commands
-- Return errors with custom exit codes
-- Print custom error messages
+- Return errors with custom messages and exit codes
 - Execute commands concurrently (TODO)
 - Execute commands in Docker containers (TODO)
 
