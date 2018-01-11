@@ -12,12 +12,16 @@ type jsReturnObject interface {
 }
 
 func convertToReturnObj(ot *otto.Otto, val otto.Value) (jsReturnObject, error) {
-	sRet, sErr := convertToSuccessReturn(val)
-	eRet, eErr := convertToErrorReturn(val)
+	obj := val.Object()
+	if obj == nil {
+		return nil, fmt.Errorf("return value was not an object")
+	}
+	sRet, sErr := convertToSuccessReturn(obj)
+	eRet, eErr := convertToErrorReturn(obj)
 	if sErr != nil && eErr != nil {
 		return nil, fmt.Errorf("unknown return value (%+v)", val)
 	}
-	if sErr != nil {
+	if eErr == nil {
 		return eRet, nil
 	}
 	return sRet, nil
@@ -33,15 +37,11 @@ func (s *successReturn) String() string {
 }
 
 func newSuccessReturn(ot *otto.Otto, descr string) (otto.Value, error) {
-	return ot.ToValue(map[string]string{"description": descr})
+	return ot.ToValue(map[string]string{"pare_description": descr})
 }
 
-func convertToSuccessReturn(val otto.Value) (*successReturn, error) {
-	obj := val.Object()
-	if obj == nil {
-		return nil, errors.WithStack(fmt.Errorf("no success object exists"))
-	}
-	descrVal, err := obj.Get("description")
+func convertToSuccessReturn(obj *otto.Object) (*successReturn, error) {
+	descrVal, err := obj.Get("pare_description")
 	if err != nil {
 		return nil, errors.WithStack(fmt.Errorf("no description found"))
 	}
@@ -67,22 +67,18 @@ func (e *errorReturn) String() string {
 
 func newErrorReturn(ot *otto.Otto, exitCode int, descr string) (otto.Value, error) {
 	return ot.ToValue(map[string]interface{}{
-		"error": descr,
-		"code":  exitCode,
+		"pare_description": descr,
+		"pare_exit_code":   int64(exitCode),
 	})
 }
 
-func convertToErrorReturn(val otto.Value) (*errorReturn, error) {
-	obj := val.Object()
-	if obj == nil {
-		return nil, fmt.Errorf("no error object exists")
-	}
-	descrVal, err := obj.Get("error")
+func convertToErrorReturn(obj *otto.Object) (*errorReturn, error) {
+	descrVal, err := obj.Get("pare_description")
 	if err != nil {
 		return nil, fmt.Errorf("couldn't find the error key")
 	}
 
-	codeVal, err := obj.Get("code")
+	codeVal, err := obj.Get("pare_exit_codw")
 	if err != nil {
 		return nil, fmt.Errorf("couldn't find the code key")
 	}
