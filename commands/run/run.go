@@ -2,7 +2,6 @@ package run
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/fatih/color"
 	"github.com/robertkrimen/otto"
@@ -41,20 +40,5 @@ func run(cmd *cobra.Command, args []string) error {
 		color.Red("-----> target %s not found", targetName)
 		return fmt.Errorf("target %s not found", targetName)
 	}
-	callVal, err := val.Call(val)
-	if err != nil {
-		color.Red("-----> error calling target %s (%s)", targetName, err)
-		return fmt.Errorf("error calling target %s (%s)", targetName, err)
-	}
-	errObj, err := convertToErrObj(callVal)
-	if err == nil {
-		color.Red("Error: %s", errObj)
-		os.Exit(errObj.code)
-	}
-	succObj, err := convertToSuccessObj(callVal)
-	if err == nil {
-		color.Green(succObj.descrStr)
-		return nil
-	}
-	return fmt.Errorf("unknown return from script (%+v)", callVal)
+	return callJSFunction(vm, targetName, val)
 }

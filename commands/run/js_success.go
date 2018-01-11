@@ -1,9 +1,6 @@
 package run
 
 import (
-	"fmt"
-
-	"github.com/pkg/errors"
 	"github.com/robertkrimen/otto"
 )
 
@@ -28,37 +25,9 @@ func (s *jsSuccess) run(fnc otto.FunctionCall) otto.Value {
 		descrStr = str
 	}
 
-	succObj, err := newSuccessObj(ot, &successObj{descrStr: descrStr})
+	ret, err := newSuccessReturn(ot, descrStr)
 	if err != nil {
 		return newPareError(ot, "couldn't create a success object")
 	}
-	return succObj
-}
-
-type successObj struct {
-	descrStr string
-}
-
-func (s *successObj) String() string {
-	return s.descrStr
-}
-
-func newSuccessObj(ot *otto.Otto, succ *successObj) (otto.Value, error) {
-	return ot.ToValue(map[string]string{"description": succ.descrStr})
-}
-
-func convertToSuccessObj(val otto.Value) (*successObj, error) {
-	obj := val.Object()
-	if obj == nil {
-		return nil, errors.WithStack(fmt.Errorf("no success object exists"))
-	}
-	descrVal, err := obj.Get("description")
-	if err != nil {
-		return nil, errors.WithStack(fmt.Errorf("no description found"))
-	}
-	descrStr, err := descrVal.ToString()
-	if err != nil {
-		return nil, errors.WithStack(fmt.Errorf("description was not a string"))
-	}
-	return &successObj{descrStr: descrStr}, nil
+	return ret
 }

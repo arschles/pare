@@ -31,9 +31,9 @@ func jsErrorFunc(fnc otto.FunctionCall) otto.Value {
 	if err != nil {
 		return newPareError(ot, "second argument to error() is not a string")
 	}
-	errObj, err := newPareErrorObject(ot, int(exitNum), descrStr)
+	ret, err := newErrorReturn(ot, int(exitNum), descrStr)
 	if err != nil {
 		return newPareError(ot, fmt.Sprintf("couldn't create a new error object (%s)", err))
 	}
-	return errObj
+	return ret
 }
