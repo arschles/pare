@@ -51,5 +51,10 @@ func run(cmd *cobra.Command, args []string) error {
 		color.Red("Error: %s", errObj)
 		os.Exit(errObj.code)
 	}
-	return nil
+	succObj, err := convertToSuccessObj(callVal)
+	if err == nil {
+		color.Green(succObj.descrStr)
+		return nil
+	}
+	return fmt.Errorf("unknown return from script (%+v)", callVal)
 }
