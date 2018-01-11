@@ -110,12 +110,16 @@ code and a string description:
 return error(1, "the thing failed!")
 ```
 
-You'll always want to put `return` in front of this function. Pare knows how to convert the 
-return value of `error` into nicely formatted output.
+You should always want to put `return` in front of this function because pare 
+knows how to convert the return value of `error` into nicely formatted output.
 
 ## `success`
 
-TODO
+This function prints a custom message indicating a successful run
+(Pare will print it in green text where it can) and causes your program to `exit 0`.
+
+You should always put a `return` in front of this function because Pare knows
+how to convert the return value of `success` into nicely formatted output.
 
 ## `addTarget`
 
