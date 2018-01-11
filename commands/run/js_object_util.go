@@ -6,6 +6,17 @@ import (
 	"github.com/robertkrimen/otto"
 )
 
+func checkStringInObject(obj *otto.Object, key, expected string) error {
+	str, err := stringFromObject(obj, key)
+	if err != nil {
+		return err
+	}
+	if str != expected {
+		return fmt.Errorf("expected %s to be %s, but got %s", key, expected, str)
+	}
+	return err
+}
+
 func stringFromObject(obj *otto.Object, key string) (string, error) {
 	val, err := obj.Get(key)
 	if err != nil {
