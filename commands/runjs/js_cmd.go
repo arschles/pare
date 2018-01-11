@@ -28,6 +28,7 @@ func jsCmd(fnc otto.FunctionCall) otto.Value {
 	cmd := exec.Command(argStrings[0], argStrings[1:]...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
+	logger.Printf(cmdJoined)
 	if err := cmd.Run(); err != nil {
 		return newPareError(ot, fmt.Sprintf("'%s', failed (%s)", cmdJoined, err))
 	}

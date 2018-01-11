@@ -1,9 +1,8 @@
 package runjs
 
 import (
-	// "errors"
 	"fmt"
-	// "io/ioutil"
+	"os"
 
 	"github.com/robertkrimen/otto"
 	"github.com/spf13/cobra"
@@ -15,11 +14,6 @@ func run(cmd *cobra.Command, args []string) error {
 	}
 	targetName := args[0]
 
-	// fileBytes, err := ioutil.ReadFile("pare.js")
-	// if err != nil {
-	// 	logger.Printf("error reading file")
-	// 	return errors.New("error reading file")
-	// }
 	vm := otto.New()
 	targets := newJSTargets()
 	vm.Set("addTarget", targets.add)
@@ -44,8 +38,15 @@ func run(cmd *cobra.Command, args []string) error {
 	if !ok {
 		return fmt.Errorf("target %s not found", targetName)
 	}
-	if _, err := val.Call(val); err != nil {
+	callVal, err := val.Call(val)
+	if err != nil {
 		logger.Printf("error calling target %s (%s)", targetName, err)
+		return fmt.Errorf("error calling target %s (%s)", targetName, err)
+	}
+	errObj, err := convertToErrObj(callVal)
+	if err == nil {
+		logger.Printf("Error: %s", errObj)
+		os.Exit(errObj.code)
 	}
 	return nil
 }
