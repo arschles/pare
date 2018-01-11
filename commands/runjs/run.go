@@ -1,9 +1,9 @@
 package runjs
 
 import (
-	"errors"
+	// "errors"
 	"fmt"
-	"io/ioutil"
+	// "io/ioutil"
 
 	"github.com/robertkrimen/otto"
 	"github.com/spf13/cobra"
@@ -13,21 +13,39 @@ func run(cmd *cobra.Command, args []string) error {
 	if len(args) == 0 {
 		return fmt.Errorf("no target was specified")
 	}
+	targetName := args[0]
 
-	fileBytes, err := ioutil.ReadFile("pare.js")
-	if err != nil {
-		logger.Printf("error reading file")
-		return errors.New("error reading file")
-	}
+	// fileBytes, err := ioutil.ReadFile("pare.js")
+	// if err != nil {
+	// 	logger.Printf("error reading file")
+	// 	return errors.New("error reading file")
+	// }
 	vm := otto.New()
-	targets := &targets{}
+	targets := newJSTargets()
 	vm.Set("addTarget", targets.add)
-	val, err := vm.Run(string(fileBytes))
+	vm.Set("error", jsErrorFunc)
+	success := &jsSuccess{target: targetName}
+	vm.Set("success", success.run)
+	vm.Set("cmd", jsCmd)
+	script, err := vm.Compile("pare.js", nil)
+	if err != nil {
+		logger.Printf("error compiling script (%s)", err)
+	}
+
+	logger.Printf("successfully compiled js file")
+
+	val, err := vm.Run(script)
 	if err != nil {
 		logger.Printf("error running (%s)", err)
 		return err
 	}
-	logger.Printf("found targets (%+v)", targets.strs)
-	logger.Printf("success! (%+v)", val)
+
+	val, ok := targets.funcs[targetName]
+	if !ok {
+		return fmt.Errorf("target %s not found", targetName)
+	}
+	if _, err := val.Call(val); err != nil {
+		logger.Printf("error calling target %s (%s)", targetName, err)
+	}
 	return nil
 }
