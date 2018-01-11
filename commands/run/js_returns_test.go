@@ -13,13 +13,12 @@ func TestConvertToErrorReturn(t *testing.T) {
 	ot := otto.New()
 	errVal, err := newErrorReturn(ot, exitCode, descr)
 	assert.NoError(t, err)
-	retErrObj, err := convertToErrorReturn(errVal)
+	retObj, err := convertToReturnObj(ot, errVal)
 	assert.NoError(t, err)
-	assert.Equalf(t, &errorReturn{
-		descrStr: descr,
-		code:     exitCode,
-	}, retErrObj, "error objects didn't match")
-
+	retError, ok := retObj.(*errorReturn)
+	assert.True(t, ok, "expected an error return, got (%#v)", retObj)
+	assert.Equal(t, exitCode, retError.code, "exit codes didn't match")
+	assert.Equal(t, descr, retError.descrStr, "description strings didn't match")
 }
 
 func TestConvertToSuccessReturn(t *testing.T) {
@@ -30,6 +29,6 @@ func TestConvertToSuccessReturn(t *testing.T) {
 	retObj, err := convertToReturnObj(vm, successRet)
 	assert.NoError(t, err)
 	retSuccess, ok := retObj.(*successReturn)
-	assert.True(t, ok, "expected a success return")
-	assert.Equal(t, msg, retSuccess.descrStr, "description strings")
+	assert.True(t, ok, "expected a success return, got %#v", retObj)
+	assert.Equal(t, msg, retSuccess.descrStr, "description strings didn't match")
 }
