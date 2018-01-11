@@ -1,4 +1,4 @@
-package runjs
+package run
 
 import (
 	"github.com/fatih/color"

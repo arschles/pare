@@ -1,4 +1,4 @@
-package runjs
+package run
 
 import (
 	"fmt"

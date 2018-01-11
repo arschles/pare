@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/arschles/pare/commands/run"
-	"github.com/arschles/pare/commands/runjs"
 	"github.com/spf13/cobra"
 )
 
@@ -37,7 +36,6 @@ func main() {
 	cmdFlags.Parse(os.Args)
 
 	cmd.AddCommand(run.Root())
-	cmd.AddCommand(runjs.Root())
 
 	if err := cmd.Execute(); err != nil {
 		os.Exit(1)
