@@ -1,6 +1,7 @@
 package runjs
 
 import (
+	"github.com/fatih/color"
 	"github.com/robertkrimen/otto"
 )
 
@@ -21,7 +22,7 @@ func (s *jsSuccess) run(fnc otto.FunctionCall) otto.Value {
 		if err != nil {
 			return newPareError(ot, "first argument to success() was not a string")
 		}
-		logger.Printf(str)
+		color.Green(str)
 	}
 
 	return otto.UndefinedValue()

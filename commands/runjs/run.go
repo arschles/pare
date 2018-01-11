@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/fatih/color"
 	"github.com/robertkrimen/otto"
 	"github.com/spf13/cobra"
 )
@@ -23,10 +24,11 @@ func run(cmd *cobra.Command, args []string) error {
 	vm.Set("cmd", jsCmd)
 	script, err := vm.Compile("pare.js", nil)
 	if err != nil {
-		logger.Printf("error compiling script (%s)", err)
+		color.Red("-----> error compiling script (%s)", err)
+		return fmt.Errorf("error compiling script (%s)", err)
 	}
 
-	logger.Printf("successfully compiled js file")
+	color.Green("----> successfully compiled js file")
 
 	val, err := vm.Run(script)
 	if err != nil {
@@ -36,16 +38,17 @@ func run(cmd *cobra.Command, args []string) error {
 
 	val, ok := targets.funcs[targetName]
 	if !ok {
+		color.Red("-----> target %s not found", targetName)
 		return fmt.Errorf("target %s not found", targetName)
 	}
 	callVal, err := val.Call(val)
 	if err != nil {
-		logger.Printf("error calling target %s (%s)", targetName, err)
+		color.Red("-----> error calling target %s (%s)", targetName, err)
 		return fmt.Errorf("error calling target %s (%s)", targetName, err)
 	}
 	errObj, err := convertToErrObj(callVal)
 	if err == nil {
-		logger.Printf("Error: %s", errObj)
+		color.Red("Error: %s", errObj)
 		os.Exit(errObj.code)
 	}
 	return nil
