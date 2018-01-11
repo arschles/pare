@@ -25,7 +25,6 @@ func convertToReturnObj(ot *otto.Otto, val otto.Value) (jsReturnObject, error) {
 		return eRet, nil
 	}
 	return sRet, nil
-
 }
 
 type successReturn struct {
@@ -41,15 +40,11 @@ func newSuccessReturn(ot *otto.Otto, descr string) (otto.Value, error) {
 }
 
 func convertToSuccessReturn(obj *otto.Object) (*successReturn, error) {
-	descrVal, err := obj.Get("pare_description")
+	descr, err := stringFromObject(obj, "pare_description")
 	if err != nil {
-		return nil, errors.WithStack(fmt.Errorf("no description found"))
+		return nil, errors.WithStack(err)
 	}
-	descrStr, err := descrVal.ToString()
-	if err != nil {
-		return nil, errors.WithStack(fmt.Errorf("description was not a string"))
-	}
-	return &successReturn{descrStr: descrStr}, nil
+	return &successReturn{descrStr: descr}, nil
 }
 
 type errorReturn struct {
@@ -73,23 +68,13 @@ func newErrorReturn(ot *otto.Otto, exitCode int, descr string) (otto.Value, erro
 }
 
 func convertToErrorReturn(obj *otto.Object) (*errorReturn, error) {
-	descrVal, err := obj.Get("pare_description")
+	descr, err := stringFromObject(obj, "pare_description")
 	if err != nil {
-		return nil, fmt.Errorf("couldn't find the error key")
+		return nil, errors.WithStack(err)
 	}
-
-	codeVal, err := obj.Get("pare_exit_codw")
+	code, err := numberFromObject(obj, "pare_exit_code")
 	if err != nil {
-		return nil, fmt.Errorf("couldn't find the code key")
+		return nil, errors.WithStack(err)
 	}
-
-	descrStr, err := descrVal.ToString()
-	if err != nil {
-		return nil, fmt.Errorf("error description wasn't a string")
-	}
-	errCode, err := codeVal.ToInteger()
-	if err != nil {
-		return nil, fmt.Errorf("error code wasn't a number")
-	}
-	return &errorReturn{descrStr: descrStr, code: int(errCode)}, nil
+	return &errorReturn{descrStr: descr, code: int(code)}, nil
 }
