@@ -57,4 +57,79 @@ After you install the CLI, write your Javascript and run `pare run mytarget`
 
 # Writing your build script
 
+A build script is a collection of Javascript functions and calls to `addTarget`. Here is an
+example build script that's adapted from [pare's own build script](./pare.js):
+
+```javascript
+function build() {
+    var binaryOutput = "./pare"
+    var exit = cmd("go", "build", "-o", binaryOutput, ".")
+    if (exit != 0) {
+        return error(1, "build failed!")
+    }
+    return success("binary has been output to " + binaryOutput)
+}
+addTarget("buildcli", build)
+```
+
+In this script, we define a `build` function, which calls `go build` to compile the `pare` binary.
+After we define the function, we call `addTarget`, which exposes the function to the `pare run`
+command. In this script, we tell Pare to expose a `buildcli` target that will run the `build`
+function.
+
+In other words, when `pare run buildcli` is called on the command line, the `build` function 
+in the Javascript file will be called.
+
+# Javascript Reference
+
+Pare uses the [otto](https://github.com/robertkrimen/otto) Javascript interpreter to execute
+Javascript. It's simple Javascript - think closer to ECMAScript 5 than 6 or 7.
+
+On top of the standard Javascript, Pare adds a few extra functions. These are what you should
+use to make your build script powerful. Here they are:
+
+## `cmd`
+
+This function runs a command on the host. It pipes `STDOUT` from the command to the host's
+standard out, and similarly pipes `STDERR` from the command to the host's standard error.
+
+Call this function by splitting your command into individual pieces:
+
+```javascript
+var exit = cmd("npm", "test")
+```
+
+The return value of `cmd` will be the exit code of the command.
+
+## `error`
+
+This function returns an error that you define. Call it by providing a numeric exit
+code and a string description:
+
+```javascript
+return error(1, "the thing failed!")
+```
+
+You'll always want to put `return` in front of this function. Pare knows how to convert the 
+return value of `error` into nicely formatted output.
+
+## `success`
+
 TODO
+
+## `addTarget`
+
+This function tells Pare about a new target that it should expose on the command line.
+Pass it a string name and a function:
+
+```javascript
+func build() {
+    ...
+}
+
+addTarget("build", build)
+```
+
+In the above example, you'll be able to execute `pare run build` on the command line, and Pare
+will execute the `build` function for you. You can name your targets anything you want,
+even if they are not the same as the actual Javascript function.
