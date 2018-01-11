@@ -2,20 +2,35 @@
 
 [![CircleCI](https://circleci.com/gh/arschles/pare.svg?style=svg)](https://circleci.com/gh/arschles/pare)
 
-Pare is a build tool for modern software develompent. It focuses on making it easy to run _all_ your development
-tools when you need them, so you don't have to write hacky Makefiles or learn complicated new build systems.
+Pare is a build and workflow tool for modern software develompent. It focuses on making it easy 
+to run _all_ your development tools when you need them, so you don't have to write hacky 
+Makefiles or learn complicated new build systems.
 
-You can configure Pare with a single one-line file, or you can build more advanced workflows.
+Instead, you just write Javascript to define your workflow. 
 
-# What does it do?
+# What is a workflow?
 
-Imagine you're building a website that needs a bunch of daemons running (microservices!). Normally
-you'd open up a few terminal windows and run each one in a new window. But that's a pain!
+The Javascript you write isn't just plain Javascript. Pare provides powerful functions to use in 
+your scripts that let you do things like this:
 
-Pare can run all of your daemons with a single command. Just tell it what to run in a simple 
-[configuration file](#configuring) and run `pare`. The command takes over from there.
+- Execute commands
+- Return errors with custom exit codes
+- Print custom error messages
+- Execute commands concurrently (TODO)
+- Execute commands in Docker containers (TODO)
 
-# Installing
+All this functionality means that you can execute plain builds and tests
+(like `go test` or `npm test`), but you can also do more complex things like:
+
+- Run unit tests, and fail immediately if the tests failed
+- Launch the development database
+- Run the frontend webpack development server
+- Run the backend API server
+- Wait until all these services launched properly
+- Run your integration tests against the frontend
+- Exit 0 only if everything came up properly and the integration tests passed
+
+# I'm interested, how do I install this thing?
 
 The `pare` CLI is distributed as a self-contained binary. You don't have to download any
 dependencies or run any special installer. Binaries are distributed for Linux (64 bit),
@@ -26,7 +41,11 @@ for your system (see the links below) and put it in your executable path:
 - [Mac OS X (64 bit)](https://storage.googleapis.com/pare-cli/pare_darwin_amd64)
 - [Windows (64 bit)](https://storage.googleapis.com/pare-cli/pare_windows_amd64.exe)
 
-# Configuring
+After you install the CLI, write your Javascript and run `pare run mytarget`
+
+# Writing your build script
+
+TODO...
 
 The `pare` CLI looks for a `pare.toml` file in the current working directory when it runs. This file holds the commands that `pare` should run.
 
