@@ -5,7 +5,7 @@
 _This project is alpha. Interface and features may change. This message will be removed
 when the project reaches beta._
 
-Pare is a build and workflow tool for modern software develompent. It focuses on making it easy 
+Pare is a build and workflow tool for modern software development. It focuses on making it easy 
 to run _all_ your development tools when you need them, so you don't have to write hacky 
 Makefiles or learn complicated new build systems.
 
