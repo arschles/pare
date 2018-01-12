@@ -51,7 +51,7 @@ function buildAndTest() {
     // - if all steps passed, it will return with an exit code of 0
     // - if one or more steps failed, it will return with the exit code of the
     //   first failed step in the original group
-    var seqRef = group.runSeq()
+    var runResult = group.runSeq()
 
     // start running all steps concurrently and return a run reference that you 
     // can use to keep track of what's going on. steps will really be running
@@ -91,5 +91,5 @@ function buildAndTest() {
     // - if all steps passed, it will return with an exit code of 0
     // - if one or more steps failed, it will return with the exit code of the
     //   first failed step in the original group
-    var results = runRef.wait()
+    var runResult = runRef.wait()
 }
